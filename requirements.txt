@@ -1,0 +1,6 @@
+fastapi 
+uvicorn
+pydantic
+pydantic-settings
+motor
+git+https://github.com/dpkp/kafka-python.git
