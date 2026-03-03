@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment  
+metadata:
+  name: count-service
+  namespace: refundai
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: count-service
+  template:
+    metadata:
+      labels:
+        app: count-service
+    spec:
+      containers:
+        - name: count-service
+          image: ghcr.io/arshadm25/count-service:v1
+          ports:
+            - containerPort: 8000
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: count-service-env
+      imagePullSecrets:
+        - name: ghcr-secret

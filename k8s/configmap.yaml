@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: count-service-env
+  namespace: refundai
+data:
+  MONGO_URI: "mongodb://mongodb.infra.svc.cluster.local:27017"
+  KAFKA_BROKER_URL: "kafka:9093"
+  KAFKA_TOPIC: "count"
