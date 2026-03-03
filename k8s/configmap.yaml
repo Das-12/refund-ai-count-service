@@ -5,5 +5,5 @@ metadata:
   namespace: refundai
 data:
   MONGO_URI: "mongodb://mongodb.infra.svc.cluster.local:27017"
-  KAFKA_BROKER_URL: "kafka:9093"
+  KAFKA_BROKER_URL: "kafka-service.infra.svc.cluster.local:9092"
   KAFKA_TOPIC: "count"

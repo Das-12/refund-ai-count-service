@@ -1,4 +1,5 @@
 from kafka import KafkaConsumer
+import os
 from app.kafka_consumer import consume_logs
 from fastapi import FastAPI, HTTPException, status
 from .models import LogEntry
@@ -9,9 +10,10 @@ import asyncio
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    KAFKA_BROKER_URL = 'kafka:9093'
-    KAFKA_TOPIC = 'count'
+    KAFKA_BROKER_URL = os.getenv("KAFKA_BROKER_URL", "kafka-service.infra.svc.cluster.local:9092")
+    KAFKA_TOPIC = os.getenv("KAFKA_TOPIC", "count")
     retries = 10
+    consumer = None
     while retries > 0:
         try:
             consumer = KafkaConsumer(
@@ -24,9 +26,14 @@ async def lifespan(app: FastAPI):
             print('consumer started')
             break
         except Exception as e:
-            print('failed starting consumer')
+            print(f'failed starting consumer: {str(e)}')
             retries -= 1
             await asyncio.sleep(10)  # Wait before retrying
+
+    if consumer is None:
+        print("Final attempt to start consumer failed. Application may not function correctly.")
+        yield
+        return
 
     task = asyncio.create_task(consume_logs(consumer=consumer))
     try:
